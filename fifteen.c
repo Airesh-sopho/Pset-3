@@ -181,11 +181,24 @@ void init(int dim)
 /**
  * Prints the board in its current state.
  */
-void draw(void)
+void draw(int dim)
 {
-    // TODO
+    for(i = 0; i < dim; i++)
+    {
+        for(j = 0; j < dim; j++)
+        {
+            if (i == row_pos && j == col_pos)
+            {
+                printf(" _  ");
+            }
+            else
+            {
+                printf("%2d  ", board[i][j]);
+            }
+        }
+        printf("\n");
+    }
 }
-
 /**
  * If tile borders empty space, moves tile and returns true, else
  * returns false. 
