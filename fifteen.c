@@ -203,9 +203,40 @@ void draw(int dim)
  * If tile borders empty space, moves tile and returns true, else
  * returns false. 
  */
-bool move(int tile)
+bool move(int tile, int dim)
 {
-    // TODO
+    // temperory row and column position of the tile
+    int temp_row; 
+    int temp_col; 
+    for(i = 0; i < dim; i++)
+    {
+        for(j = 0; j < dim; j++)
+        {
+            if (board[i][j] == tile)
+            {
+                temp_row = i;
+                temp_col = j;
+            }
+        }
+    }
+    if (((row_pos + 1) == temp_row && (col_pos == temp_col)) || 
+            ((row_pos - 1) == temp_row && (col_pos == temp_col)))
+    {
+        board[row_pos][col_pos] = tile;
+        board[temp_row][temp_col] = 0;
+        row_pos = temp_row;
+        col_pos = temp_col;
+        return true;
+    }
+    if (((row_pos) == temp_row && (col_pos == temp_col + 1)) || 
+            ((row_pos) == temp_row && (col_pos == temp_col - 1)))
+    {
+        board[row_pos][col_pos] = tile;
+        board[temp_row][temp_col] = 0;
+        row_pos = temp_row;
+        col_pos = temp_col;
+        return true;
+    }
     return false;
 }
 
