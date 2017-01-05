@@ -244,8 +244,23 @@ bool move(int tile, int dim)
  * Returns true if game is won (i.e., board is in winning configuration), 
  * else false.
  */
-bool won(void)
+bool won(int dim)
 {
-    // TODO
-    return false;
+    temp = 1;
+    for(i = 0; i < dim; i++)
+    {
+        for(j = 0; j < dim; j++)
+        {
+            if (i == dim - 1 && j == dim - 1 && board[i][j] == 0)
+            {
+                continue;
+            }
+            if (board[i][j] != temp)
+            {
+                return false;
+            }
+            temp++;
+        }
+    }
+    return true;
 }
