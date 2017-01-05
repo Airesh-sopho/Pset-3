@@ -1,0 +1,11 @@
+questions.txt
+
+Computer Science 50
+Problem Set 3
+
+
+0. The dimensions for the board can range from 3*3 upto 9*9.
+1. The game's board is represented by a double dimensional array.
+2. The function greet is called to greet the player at game's start.
+3. The functions I need to implement are init(), draw(), move() and won().
+
