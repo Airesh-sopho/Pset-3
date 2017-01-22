@@ -8,9 +8,9 @@
  */
        
 #include <cs50.h>
-
+#include <stdio.h>
 #include "helpers.h"
-
+ 
 /**
  * Returns true if value is in array of n values, else false.
  */
@@ -46,7 +46,7 @@ bool search(int value, int values[], int n)
     }
     return false;
 }
-
+ 
 /**
  * Sorts array of n values.
  */
@@ -74,3 +74,4 @@ void sort(int values[], int n)
     }
     return;
 }
+

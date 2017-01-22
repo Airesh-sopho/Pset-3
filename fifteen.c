@@ -16,30 +16,43 @@
  */
  
 #define _XOPEN_SOURCE 500
-
+ 
 #include <cs50.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-
+ 
 // constants
 #define DIM_MIN 3
 #define DIM_MAX 9
-
+ 
 // board
 int board[DIM_MAX][DIM_MAX];
-
+ 
 // dimensions
-int d;
-
+int dimensions;
+ 
+// row and column variables for the 'for' loops
+ // row
+int i;
+ // column
+int j;
+ 
+// position of the blank space
+int row_pos;
+int col_pos;
+ 
+// just a temporary variable
+int temp;
+ 
 // prototypes
 void clear(void);
 void greet(void);
-void init(void);
-void draw(void);
-bool move(int tile);
-bool won(void);
-
+void init(int dim);
+void draw(int dim);
+bool move(int tile, int dim);
+bool won(int dim);
+ 
 int main(int argc, string argv[])
 {
     // ensure proper usage
@@ -48,45 +61,45 @@ int main(int argc, string argv[])
         printf("Usage: fifteen d\n");
         return 1;
     }
-
+ 
     // ensure valid dimensions
-    d = atoi(argv[1]);
-    if (d < DIM_MIN || d > DIM_MAX)
+    dimensions = atoi(argv[1]);
+    if (dimensions < DIM_MIN || dimensions > DIM_MAX)
     {
         printf("Board must be between %i x %i and %i x %i, inclusive.\n",
             DIM_MIN, DIM_MIN, DIM_MAX, DIM_MAX);
         return 2;
     }
-
+ 
     // open log
     FILE* file = fopen("log.txt", "w");
     if (file == NULL)
     {
         return 3;
     }
-
+ 
     // greet user with instructions
     greet();
-
+ 
     // initialize the board
-    init();
-
+    init(dimensions);
+ 
     // accept moves until game is won
     while (true)
     {
         // clear the screen
         clear();
-
+ 
         // draw the current state of the board
-        draw();
-
+        draw(dimensions);
+ 
         // log the current state of the board (for testing)
-        for (int i = 0; i < d; i++)
+        for (int i = 0; i < dimensions; i++)
         {
-            for (int j = 0; j < d; j++)
+            for (int j = 0; j < dimensions; j++)
             {
                 fprintf(file, "%i", board[i][j]);
-                if (j < d - 1)
+                if (j < dimensions - 1)
                 {
                     fprintf(file, "|");
                 }
@@ -94,14 +107,14 @@ int main(int argc, string argv[])
             fprintf(file, "\n");
         }
         fflush(file);
-
+ 
         // check for win
-        if (won())
+        if (won(dimensions))
         {
             printf("ftw!\n");
             break;
         }
-
+ 
         // prompt for move
         printf("Tile to move: ");
         int tile = GetInt();
@@ -111,29 +124,29 @@ int main(int argc, string argv[])
         {
             break;
         }
-
+ 
         // log move (for testing)
         fprintf(file, "%i\n", tile);
         fflush(file);
-
+ 
         // move if possible, else report illegality
-        if (!move(tile))
+        if (!move(tile,dimensions))
         {
             printf("\nIllegal move.\n");
             usleep(500000);
         }
-
+ 
         // sleep thread for animation's sake
         usleep(500000);
     }
     
     // close log
     fclose(file);
-
+ 
     // success
     return 0;
 }
-
+ 
 /**
  * Clears screen using ANSI escape sequences.
  */
@@ -142,7 +155,7 @@ void clear(void)
     printf("\033[2J");
     printf("\033[%d;%dH", 0, 0);
 }
-
+ 
 /**
  * Greets player.
  */
@@ -152,7 +165,7 @@ void greet(void)
     printf("WELCOME TO GAME OF FIFTEEN\n");
     usleep(2000000);
 }
-
+ 
 /**
  * Initializes the game's board with tiles numbered 1 through d*d - 1
  * (i.e., fills 2D array with values but does not actually print them).  
@@ -177,7 +190,7 @@ void init(int dim)
     row_pos = dim - 1;
     col_pos = dim - 1;
 }
-
+ 
 /**
  * Prints the board in its current state.
  */
@@ -199,6 +212,7 @@ void draw(int dim)
         printf("\n");
     }
 }
+ 
 /**
  * If tile borders empty space, moves tile and returns true, else
  * returns false. 
@@ -239,7 +253,7 @@ bool move(int tile, int dim)
     }
     return false;
 }
-
+ 
 /**
  * Returns true if game is won (i.e., board is in winning configuration), 
  * else false.
